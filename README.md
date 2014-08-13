@@ -3,8 +3,9 @@ NodQuery
 
 Small and personal jquery-like selector library 
 
-++
-$(".test") // class selector
-$("#test") // id selector
-$("#test").html() // html content selector
+Usage
+===
+$(".test") // class selector<br>
+$("#test") // id selector<br>
+$("#test").html() // html content selector<br>
 $("#test").html('works') // html content replace
