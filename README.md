@@ -16,3 +16,11 @@ $("#test") // id selector<br>
 $("#test").html() // html content selector<br>
 $("#test").html('works') // html content replace<br>
 $("#test").html().length // now shows 5
+$("#select").on("change",function(e){ $("#test").html('Selected:' this.val())  });
+
+Event methods
+===
+click,	keypress,	submit,
+dblclick,	keydown,	change,
+mouseenter,	keyup,	focus
+mouseleave,	 	blur
