@@ -1,18 +1,17 @@
-/* NodQuery v0.2 https://github.com/Nodws/NodQuery */
+/* 
+	NodQuery v0.3 
+	https://github.com/Nodws/NodQuery 
+*/
 	var se = '';
 	var $ = function(c){
 		se = c;
 		return document.querySelector(c);
 	}
 	Element.prototype.html = function(h){
-		if(h)
-		return this.innerHTML=h;
-		return this.innerHTML;		
+		return h ? this.innerHTML=h : this.innerHTML;		
 	}
 	Element.prototype.text = function(t){
-		if(t)
-		return this.textContent =h;
-		return this.textContent ;		
+		return t ? this.textContent=t : this.textContent ;		
 	}
 	Element.prototype.hide = function(){
 		this.style.display = 'none';
@@ -30,9 +29,7 @@
 		  this.classList.remove(c);
 	}	
 	Element.prototype.toggleClass = function(c){
-		if (this.classList.contains(c))
-		return this.classList.remove(c);
-		return this.classList.add(c);
+		return this.classList.contains(c) ? this.classList.remove(c) : this.classList.add(c);
 	}
 	Element.prototype.append = function(c){
 		return this.innerHTML += c;
@@ -54,17 +51,18 @@
 	}	
 	Element.prototype.parent = function(){
 		return this.parentNode;
+	}		
+	Element.prototype.val = function(){
+		return "0" in this ? this[0].value : this.value;
 	}	
 	Element.prototype.remove = function(){
 		this.parentNode.removeChild(this);
 	}	
 	Element.prototype.attr = function(a,b){
-		if(b)
-		return this.setAttribute(a,b);
-		return this.getAttribute(a);	
+		return b ? this.setAttribute(a,b) : this.getAttribute(a);	
 	}
 	Element.prototype.on = function(h,f){
-		return this.addEventListener(h, f);
+		return this.addEventListener(h,f);
 	}	
 	Element.prototype.each = function(callback){
 		var $obj = document.querySelectorAll(se);
@@ -80,6 +78,5 @@
 		   o.success(r.responseText); };
 		if(typeof o.data === 'object')
 		o.data = Object.keys(o.data).reduce(function(a,k){a.push(k+'='+encodeURIComponent(o.data[k]));return a},[]).join('&')
-
 		r.send(o.data);
 	}	
