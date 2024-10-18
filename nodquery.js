@@ -1,5 +1,5 @@
 /* 
-	NodQuery v0.3 
+	NodQuery v0.5 
 	https://github.com/Nodws/NodQuery 
 */
 (function (global) {
