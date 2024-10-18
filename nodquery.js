@@ -2,81 +2,119 @@
 	NodQuery v0.3 
 	https://github.com/Nodws/NodQuery 
 */
-	var se = '';
-	var $ = function(c){
-		se = c;
-		return document.querySelector(c);
-	}
-	Element.prototype.html = function(h){
-		return h ? this.innerHTML=h : this.innerHTML;		
-	}
-	Element.prototype.text = function(t){
-		return t ? this.textContent=t : this.textContent ;		
-	}
-	Element.prototype.hide = function(){
-		this.style.display = 'none';
-	}
-	Element.prototype.show = function(){
-		this.style.display = '';
-	}
-	Element.prototype.addClass = function(c){
-			var array = c.split(' ');
-			var el = this;
-		    array.forEach(function(i){
-		      el.classList.add(i); });
-	}	
-	Element.prototype.removeClass = function(c){
-		  this.classList.remove(c);
-	}	
-	Element.prototype.toggleClass = function(c){
-		return this.classList.contains(c) ? this.classList.remove(c) : this.classList.add(c);
-	}
-	Element.prototype.append = function(c){
-		return this.innerHTML += c;
-	}	
-	Element.prototype.prepend = function(c){
-		return this.innerHTML = c + this.innerHTML;
-	}
-	Element.prototype.before = function(c){
-		return this.insertAdjacentHTML('beforebegin', c);
-	}	
-	Element.prototype.after = function(c){
-		return this.insertAdjacentHTML('afterend', c);
-	}	
-	Element.prototype.next = function(){
-		return this.nextElementSibling;
-	}	
-	Element.prototype.previous = function(){
-		return this.previousElementSibling;
-	}	
-	Element.prototype.parent = function(){
-		return this.parentNode;
-	}		
-	Element.prototype.val = function(){
-		return "0" in this ? this[0].value : this.value;
-	}	
-	Element.prototype.remove = function(){
-		this.parentNode.removeChild(this);
-	}	
-	Element.prototype.attr = function(a,b){
-		return b ? this.setAttribute(a,b) : this.getAttribute(a);	
-	}
-	Element.prototype.on = function(h,f){
-		return this.addEventListener(h,f);
-	}	
-	Element.prototype.each = function(callback){
-		var $obj = document.querySelectorAll(se);
-		for (var i=0, len=$obj.length; i<len; i++)
-    if ( callback.call($obj[i], i, $obj[i]) === false ) break;
-	}
-	$.ajax = function(o){
-		var r = new XMLHttpRequest();
-		r.open(o.type, o.url, true);
-		r.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
-		r.onreadystatechange = function () {
-		  if (r.readyState != 4 || r.status != 200)
-		   o.success(r.responseText); };
-		if(typeof o.data === 'object')
-		o.data = Object.keys(o.data).reduce(function(a,k){a.push(k+'='+encodeURIComponent(o.data[k]));return a},[]).join('&')
-		r.send(o.data);
-	}	
+(function (global) {
+    function $(selector) {
+        const elements = typeof selector === 'string' ? document.querySelectorAll(selector) : [selector];
+        
+        const obj = {
+            html(content) {
+                elements.forEach(el => el.innerHTML = content);
+                return this;
+            },
+            text(content) {
+                elements.forEach(el => el.textContent = content);
+                return this;
+            },
+            hide() {
+                elements.forEach(el => el.style.display = 'none');
+                return this;
+            },
+            show() {
+                elements.forEach(el => el.style.display = '');
+                return this;
+            },
+            addClass(className) {
+                elements.forEach(el => el.classList.add(className));
+                return this;
+            },
+            removeClass(className) {
+                elements.forEach(el => el.classList.remove(className));
+                return this;
+            },
+            toggleClass(className) {
+                elements.forEach(el => el.classList.toggle(className));
+                return this;
+            },
+            hasClass(className) {
+                return Array.from(elements).some(el => el.classList.contains(className));
+            },
+            append(content) {
+                elements.forEach(el => el.insertAdjacentHTML('beforeend', content));
+                return this;
+            },
+            prepend(content) {
+                elements.forEach(el => el.insertAdjacentHTML('afterbegin', content));
+                return this;
+            },
+            before(content) {
+                elements.forEach(el => el.insertAdjacentHTML('beforebegin', content));
+                return this;
+            },
+            after(content) {
+                elements.forEach(el => el.insertAdjacentHTML('afterend', content));
+                return this;
+            },
+            next() {
+                return $(elements[0]?.nextElementSibling);
+            },
+            previous() {
+                return $(elements[0]?.previousElementSibling);
+            },
+            parent() {
+                return $(elements[0]?.parentElement);
+            },
+            val(value) {
+                if (value === undefined) {
+                    return elements[0]?.value;
+                } else {
+                    elements.forEach(el => el.value = value);
+                    return this;
+                }
+            },
+            remove() {
+                elements.forEach(el => el.remove());
+                return this;
+            },
+            attr(name, value) {
+                if (value === undefined) {
+                    return elements[0]?.getAttribute(name);
+                } else {
+                    elements.forEach(el => el.setAttribute(name, value));
+                    return this;
+                }
+            },
+            on(event, callback) {
+                elements.forEach(el => el.addEventListener(event, callback));
+                return this;
+            },
+            each(callback) {
+                elements.forEach((el, idx) => callback.call(el, idx, el));
+                return this;
+            },
+            find(selector) {
+                return $(elements[0]?.querySelectorAll(selector));
+            },
+            get(url, callback) {
+                fetch(url)
+                    .then(response => response.text())
+                    .then(data => callback(data));
+            },
+            post(url, data, callback) {
+                fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                })
+                .then(response => response.text())
+                .then(data => callback(data));
+            }
+        };
+        
+        return obj;
+    }
+
+    global.$ = $;
+})(window);
+ 
